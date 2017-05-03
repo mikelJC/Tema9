@@ -18,12 +18,14 @@ public class ConexionDB {
         Connection con=null;
         
         try{
-            Class.forName("com.mysql.jdbc.Driver");//Cargar el driver
+            /*Class.forName("com.mysql.jdbc.Driver");//Cargar el driver
             String urldbc ="jdbc:mysql://localhost:3306/agendadb";
-            con = (Connection)(java.sql.DriverManager.getConnection(urldbc,"root",""));
+            con = (Connection)(java.sql.DriverManager.getConnection(urldbc,"root",""));*/
             
+            con = (Connection) DriverManager.getConnection ("jdbc:mysql://localhost/agendadb","root", "");
+            System.out.println("Conexión establecida con la BD");
             
-        }catch(ClassNotFoundException | SQLException e){
+        }catch(SQLException e){
             System.out.println("Ha sido imposible establecer la conexión "+ e.getMessage());
         }
         return con;
@@ -34,6 +36,7 @@ public class ConexionDB {
         try {
             if(con!=null){
                 con.close();
+                System.out.println("Conexión cerrada con la BD");
             }
         } catch (SQLException e) {
             System.out.println("Ha sido imposible cerrar la conexión "+ e.getMessage());
