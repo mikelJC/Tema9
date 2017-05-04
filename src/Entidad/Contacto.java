@@ -22,7 +22,7 @@ public class Contacto {
     
     
     
-    Contacto(){};
+    public Contacto(){};
     
     public Contacto(String n, String ap, String t, String fn) throws ParseException{
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");

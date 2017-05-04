@@ -18,7 +18,8 @@ import java.text.ParseException;
  * @author AlumMati
  */
 public class Inicio {
-
+    ContactoDAO contacdao = new ContactoDAO();
+    BufferedReader tec = new BufferedReader(new InputStreamReader(System.in));
     
     public static void main(String[] args) throws IOException, ParseException, SQLException {
 
@@ -30,8 +31,8 @@ public class Inicio {
     }
     
     public void menu() throws IOException, ParseException, SQLException{
-        BufferedReader tec = new BufferedReader(new InputStreamReader(System.in));
         
+
         int respuesta;
         
         do {
@@ -52,16 +53,16 @@ public class Inicio {
                         crearcontacto();
                         break;
                     case 2:
-                        //eliminarcontacto();
+                        eliminarcontacto();
                         break;
                     case 3:
-                        //busqueda();
+                        mostrarRst(contacdao.buscar(buscarcontacto()));
                         break;
                     case 4:
-                        //mostrarcumpleaños();
+                        mostrarRst(contacdao.cumpleaños());
                         break;
                     case 5:
-                        //mostraragenda();
+                        mostrarRst(contacdao.mostraragenda());
                         break;
                     case 6:
                         //guardarfichero();
@@ -73,7 +74,7 @@ public class Inicio {
     
     
     public void crearcontacto() throws IOException, ParseException, SQLException{
-        BufferedReader tec = new BufferedReader(new InputStreamReader(System.in));
+        
         
         
         String nombre;
@@ -99,19 +100,54 @@ public class Inicio {
         
     };
  
-    public void eliminarcontacto() throws IOException{
-        BufferedReader tec = new BufferedReader(new InputStreamReader(System.in));
+    public void eliminarcontacto() throws IOException, SQLException, ParseException{
         
+
+        int indice;
         String nombre;
         
-        System.out.println("Nombre de la persona a borrar");
+        
+        System.out.println("Introduce nombre de contacto a borrar");
         nombre = tec.readLine();
         
-        //buscar(nombre);
-    
+        Contacto con = new Contacto();
+        con.setNombre(nombre);
+        
+        ResultSet srt = contacdao.buscar(con);
+        mostrarRst(srt);
+        
+        System.out.println("Selecciona indice del contacto a borrar");
+        indice = Integer.parseInt(tec.readLine());
+        
+        contacdao.eliminar(indice);
     }
     
     
+    public Contacto buscarcontacto() throws IOException{
+        System.out.println("Introduce Nombre del Contacto");
+        String nombre = tec.readLine();
+        
+        Contacto contac = new Contacto();
+        contac.setNombre(nombre);
+        
+        return contac;
+    }
+    
+    public void mostrarRst(ResultSet rst) throws SQLException{
+                while (rst.next()) {
+            int id = rst.getInt("Id");
+            String nom = rst.getString("Nombre");
+            String ap = rst.getString("Apellidos");
+            String tl = rst.getString("Telefono");
+            Date fc =  rst.getDate("FechaNac");
+            
+            System.out.println("Id: "+id);
+            System.out.println("Nombre: "+nom+"\n"+
+                               "Apellido: "+ap+"\n"+
+                               "Telefono: "+tl+"\n"+
+                               "Fecha Nac: "+fc+"\n");
+        }
+    }
     
     
 }

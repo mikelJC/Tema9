@@ -18,6 +18,7 @@ import java.text.ParseException;
  */
 public class ContactoDAO {
     
+    
     public void añadircontactobd(Contacto con) throws SQLException{
         
         ConexionDB nuevacon = new ConexionDB();
@@ -42,8 +43,37 @@ public class ContactoDAO {
         stmt.executeUpdate();
     };
         
-    public void buscar(String nombre) throws SQLException{
+    public ResultSet buscar(Contacto con) throws SQLException, IOException{
        
+
+        ConexionDB nuevacon = new ConexionDB();
+        
+        Connection conex = nuevacon.AbrirConexion();
+        
+        Statement stmt = conex.createStatement();
+        
+        ResultSet rst = stmt.executeQuery("SELECT Nombre FROM contacto WHERE Nombre='"+con.getNombre()+"'");
+        
+        return rst;
+
+    }
+    
+    public void eliminar(int indice) throws SQLException{
+        ConexionDB nuevacon = new ConexionDB();
+        
+        Connection conex = nuevacon.AbrirConexion();
+        
+        PreparedStatement stmt = conex.prepareStatement("DELETE from contacto WHERE Id ='"+indice+"'");
+        
+        stmt.executeUpdate();
+        
+        System.out.println("Contacto con indice "+indice+" eliminado");
+    }
+    
+    
+    public ResultSet cumpleaños() throws SQLException{
+        
+        
         
         ConexionDB nuevacon = new ConexionDB();
         
@@ -51,23 +81,21 @@ public class ContactoDAO {
         
         Statement stmt = conex.createStatement();
         
-        ResultSet rst = stmt.executeQuery("SELECT Nombre FROM contacto WHERE Nombre='"+nombre+"'");
+        ResultSet rst = stmt.executeQuery("SELECT * FROM contacto WHERE day(FechaNac) = day(curdate()) AND month(FechaNac)=month(curdate())");
+                
+        return rst;
+    }
+
+    public ResultSet mostraragenda() throws SQLException{
+        ConexionDB nuevacon = new ConexionDB();
         
-        while (rst.next()) {
-            int id = rst.getInt("Id");
-            String nom = rst.getString("Nombre");
-            String ap = rst.getString("Apellidos");
-            String tl = rst.getString("Telefono");
-            Date fc =  rst.getDate("FechaNac");
-            
-            System.out.println("Id: "+id);
-            System.out.println("Nombre: "+nom+"\n"+
-                               "Apellido: "+ap+"\n"+
-                               "Telefono: "+tl+"\n"+
-                               "Fecha Nac: "+fc+"\n");
-        }
+        Connection conex = nuevacon.AbrirConexion();
         
+        Statement stmt = conex.createStatement();
         
+        ResultSet rst = stmt.executeQuery("SELECT * FROM contacto ORDER BY Nombre, Apellidos DESC");
+        
+        return rst;
     }
     
     
